@@ -36,9 +36,7 @@ def StopFunction():
 def RunFunction():
     time.sleep(0.1)
 def KillSwitch ():
-    
         bd.when_pressed = StopFunction
-        
         bd.when_released = RunFunction
     
 while True:
