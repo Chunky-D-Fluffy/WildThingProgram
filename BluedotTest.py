@@ -7,6 +7,7 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 import RPi.GPIO as GPIO
 from bluedot import BlueDot
+from signal import pause
 
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
 
@@ -16,12 +17,7 @@ mcp = MCP.MCP3008(spi,cs)
 
 bd = BlueDot()
 
-lastX = 0
-lastY = 0
-tolerance = 250
-
-finalXPos = 0
-finalYPos = 0
+a = 1
 
 def remapRange(value, leftMin, leftMax, rightMin, rightMax):
     leftSpan = leftMax - leftMin
@@ -30,26 +26,30 @@ def remapRange(value, leftMin, leftMax, rightMin, rightMax):
     valueScaled = int(value - leftMin)/ int(leftSpan)
     
     return int(rightMin + (valueScaled * rightSpan))
-def StopFunction():
-        print ('stop')
-        time.sleep(10.0)
-def RunFunction():
-    time.sleep(0.1)
-def KillSwitch ():
-        bd.when_pressed = StopFunction
-        bd.when_released = RunFunction
+def dpad(pos):
+    global a
+    a = 0
     
-while True:
-    KillSwitch()
+def stop():
+    global a
+    a = 1
+    
+def actuallyTurnOff():
+    print('stop')
+
+def run(): 
+    lastX = 0
+    lastY = 0
+    tolerance = 250
+
+    finalXPos = 0
+    finalYPos = 0
     
     xChanged = False
     yChanged = False
     
     x = AnalogIn(mcp, MCP.P0)
     y = AnalogIn(mcp, MCP.P1)
-    
-    print('x: ', x.value)
-    print('y: ', y.value)
 
     xValue = x.value
     yValue = y.value
@@ -75,7 +75,15 @@ while True:
     print('Y: ', finalYPos)
     time.sleep(.1)
 
-   
+while True:
+    bd.when_pressed = dpad
+    bd.when_released = stop
+    print('a: ', a)
+    
+    if a == 0:
+        actuallyTurnOff()
+    if a == 1:
+        run()
 
 
 
