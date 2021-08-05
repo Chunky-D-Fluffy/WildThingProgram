@@ -46,8 +46,6 @@ def dpad(pos):
 def stop():
     global a
     a = 1
-def actuallyTurnOff():
-    print('stop')
  
 def right():
     Lspeed.start(10)
@@ -137,6 +135,9 @@ def run():
         stop()
     
     time.sleep(.1)
+
+def actuallyTurnOff():
+    print('stop')
 
 while True:
     bd.when_pressed = dpad
