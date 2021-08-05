@@ -7,6 +7,7 @@ import board
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 import RPi.GPIO as GPIO
+from bluedot import BlueDot
 
 LspeedPin = 18
 LbackwardPin = 14
@@ -32,6 +33,8 @@ spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
 cs = digitalio.DigitalInOut(board.D22)
 
 mcp = MCP.MCP3008(spi,cs)
+
+bd = BlueDot()
 
 a = 1
 
